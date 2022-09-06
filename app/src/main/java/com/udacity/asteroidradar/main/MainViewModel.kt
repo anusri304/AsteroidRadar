@@ -11,6 +11,7 @@ import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.network.Asteroid
 import com.udacity.asteroidradar.network.AsteroidApi
 import com.udacity.asteroidradar.network.AsteroidApiService
+import com.udacity.asteroidradar.network.PictureOfDay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -41,8 +42,28 @@ class MainViewModel : ViewModel() {
     val navigateToSelectedProperty: LiveData<Asteroid>
         get() = _navigateToSelectedProperty
 
+    private val _pictureOfTheDay = MutableLiveData<PictureOfDay>()
+
+    val pictureOfTheDay: LiveData<PictureOfDay>
+        get() = _pictureOfTheDay
+
+
     init {
         getAsteroidList()
+        getPictureOfTheDay()
+    }
+
+    private fun getPictureOfTheDay() {
+        viewModelScope.launch {
+            try {
+                val response= AsteroidApi.retrofitService.getPictureOfTheDay("ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm")
+                //  _asteroidList.value = parseAsteroidsJsonResult(JSONObject(response))
+                _pictureOfTheDay.value = response
+                println("response" + response)
+            } catch (e: Exception) {
+                _pictureOfTheDay.value = null
+            }
+        }
     }
 
     private fun getAsteroidList() {

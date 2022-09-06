@@ -31,7 +31,7 @@ import java.util.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
-
+//TODO move to constants
 private const val BASE_URL = "https://api.nasa.gov/"
 //enum class MarsApiFilter(val value: String) { SHOW_RENT("rent"), SHOW_BUY("buy"), SHOW_ALL("all") }
 
@@ -72,6 +72,11 @@ interface AsteroidApiService {
         @Query("end_date") end_date: String,
         @Query("api_key") api_key: String
     ): String
+
+    @GET("planetary/apod")
+    suspend fun getPictureOfTheDay(
+        @Query("api_key") api_key: String
+    ): PictureOfDay
 }
 
 /**
