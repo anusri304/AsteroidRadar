@@ -9,7 +9,7 @@ import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 import kotlinx.coroutines.launch
 
-class MainFragment : Fragment() {
+class AsteroidFragment : Fragment() {
 
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
@@ -21,6 +21,8 @@ class MainFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
+
+       binding.asteroidRecycler.adapter = AsteroidAdapter()
 
         setHasOptionsMenu(true)
 

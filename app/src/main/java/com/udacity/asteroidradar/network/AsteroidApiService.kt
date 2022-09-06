@@ -52,7 +52,7 @@ val client: OkHttpClient = OkHttpClient.Builder().addInterceptor(interceptor).bu
  */
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
-    //.addConverterFactory(MoshiConverterFactory.create(moshi))
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
     .baseUrl(BASE_URL)
     .client(client)
     .build()
@@ -62,8 +62,8 @@ private val retrofit = Retrofit.Builder()
  */
 interface AsteroidApiService {
     /**
-     * Returns a Coroutine [List] of [MarsProperty] which can be fetched with await() if in a Coroutine scope.
-     * The @GET annotation indicates that the "realestate" endpoint will be requested with the GET
+     * Returns a Coroutine [List] of [Asteroid] which can be fetched with await() if in a Coroutine scope.
+     * The @GET annotation indicates that  endpoint will be requested with the GET
      * HTTP method
      */
     @GET("neo/rest/v1/feed")

@@ -31,7 +31,7 @@ class MainViewModel : ViewModel() {
     private val _asteroidList = MutableLiveData<List<Asteroid>>()
 
     // The external LiveData interface to the property is immutable, so only this class can modify
-    val properties: LiveData<List<Asteroid>>
+    val asteroidList: LiveData<List<Asteroid>>
         get() = _asteroidList
 
     // Internally, we use a MutableLiveData to handle navigation to the selected property
@@ -52,6 +52,7 @@ class MainViewModel : ViewModel() {
                 val response= AsteroidApi.retrofitService.getAsteroidList(Util.Companion.getTodaysDate(),Util.Companion.getTodaysDate(),"ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm")
              //  _asteroidList.value = parseAsteroidsJsonResult(JSONObject(response))
                 val asteroidList:List<Asteroid> = parseAsteroidsJsonResult(JSONObject(response))
+                _asteroidList.value = parseAsteroidsJsonResult(JSONObject(response))
                println("response" + asteroidList.size)
                 _status.value = AsteroidApiStatus.DONE
             } catch (e: Exception) {
