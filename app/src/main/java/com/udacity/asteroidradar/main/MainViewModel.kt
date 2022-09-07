@@ -1,20 +1,16 @@
 package com.udacity.asteroidradar.main
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Util
-import com.udacity.asteroidradar.Util.Companion.getTodaysDate
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.network.Asteroid
 import com.udacity.asteroidradar.network.AsteroidApi
-import com.udacity.asteroidradar.network.AsteroidApiService
 import com.udacity.asteroidradar.network.PictureOfDay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.text.SimpleDateFormat
 
 enum class AsteroidApiStatus { LOADING, ERROR, DONE }
 
@@ -36,11 +32,11 @@ class MainViewModel : ViewModel() {
         get() = _asteroidList
 
     // Internally, we use a MutableLiveData to handle navigation to the selected property
-    private val _navigateToSelectedProperty = MutableLiveData<Asteroid>()
+    private val _navigateToSelectedAsteroid = MutableLiveData<Asteroid>()
 
     // The external immutable LiveData for the navigation property
-    val navigateToSelectedProperty: LiveData<Asteroid>
-        get() = _navigateToSelectedProperty
+    val navigateToSelectedAsteroid: LiveData<Asteroid>
+        get() = _navigateToSelectedAsteroid
 
     private val _pictureOfTheDay = MutableLiveData<PictureOfDay>()
 
@@ -61,7 +57,7 @@ class MainViewModel : ViewModel() {
                 _pictureOfTheDay.value = response
                 println("response" + response)
             } catch (e: Exception) {
-                _pictureOfTheDay.value = null
+                _pictureOfTheDay.value = PictureOfDay("","","")
             }
         }
     }
@@ -81,6 +77,18 @@ class MainViewModel : ViewModel() {
                 _asteroidList.value = ArrayList()
             }
         }
+    }
+
+
+    fun displayAsteroidDetails(asteroid: Asteroid) {
+        _navigateToSelectedAsteroid.value = asteroid
+    }
+
+    /**
+     * After the navigation has taken place, make sure navigateToSelectedProperty is set to null
+     */
+    fun displayAsteroidDetailsComplete() {
+        _navigateToSelectedAsteroid.value = null
     }
 
 }

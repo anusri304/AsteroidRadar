@@ -55,16 +55,19 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<Asteroid>?) {
 }
 
 @BindingAdapter("pictureOfDay")
-fun bindPicOfDayImage(imageView: ImageView, imgUrl: String?) {
-    imgUrl?.let {
-        val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
-        Glide.with(imageView.context)
-            .load(imgUri)
-            .apply(
-                RequestOptions()
-                .placeholder(R.drawable.asteroid_hazardous))
-                .error(R.drawable.asteroid_hazardous)
-            .into(imageView)
-    }
+fun bindPicOfDayImage(imageView: ImageView, pictureOfDay: PictureOfDay?) {
+    if(pictureOfDay?.mediaType.equals("image")) {
+        pictureOfDay?.url?.let {
+                val imgUri =  pictureOfDay?.url.toUri().buildUpon().scheme("https").build()
+                Glide.with(imageView.context)
+                    .load(imgUri)
+                    .apply(
+                        RequestOptions()
+                            .placeholder(R.drawable.loading_animation)
+                            .error(R.drawable.ic_broken_image)
+                    )
+                    .into(imageView)
+            }
+        }
 }
 

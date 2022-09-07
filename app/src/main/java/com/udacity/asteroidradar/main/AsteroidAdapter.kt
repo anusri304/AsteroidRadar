@@ -18,6 +18,7 @@
 package com.udacity.asteroidradar.main
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -30,7 +31,7 @@ import com.udacity.asteroidradar.network.Asteroid
  * data, including computing diffs between lists.
  * @param onClick a lambda that takes the
  */
-class AsteroidAdapter :ListAdapter<Asteroid, AsteroidAdapter.AsteroidViewHolder>(DiffCallback) {
+class AsteroidAdapter( val onClickListener: OnClickListener) :ListAdapter<Asteroid, AsteroidAdapter.AsteroidViewHolder>(DiffCallback) {
     /**
      * The MarsPropertyViewHolder constructor takes the binding variable from the associated
      * GridViewItem, which nicely gives it access to the full [MarsProperty] information.
@@ -72,18 +73,18 @@ class AsteroidAdapter :ListAdapter<Asteroid, AsteroidAdapter.AsteroidViewHolder>
      */
     override fun onBindViewHolder(holder: AsteroidViewHolder, position: Int) {
         val asteroid = getItem(position)
-//        holder.itemView.setOnClickListener {
-//            onClickListener.onClick(asteroid)
-//        }
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(asteroid)
+        }
         holder.bind(asteroid)
     }
 
     /**
-     * Custom listener that handles clicks on [RecyclerView] items.  Passes the [MarsProperty]
+     * Custom listener that handles clicks on [RecyclerView] items.  Passes the [Asteroid]
      * associated with the current item to the [onClick] function.
-     * @param clickListener lambda that will be called with the current [MarsProperty]
+     * @param clickListener lambda that will be called with the current [Asteroid]
      */
-//    class OnClickListener(val clickListener: (marsProperty:MarsProperty) -> Unit) {
-//        fun onClick(marsProperty:MarsProperty) = clickListener(marsProperty)
-//    }
+    class OnClickListener(val clickListener: (asteroid:Asteroid) -> Unit) {
+        fun onClick(asteroid:Asteroid) = clickListener(asteroid)
+    }
 }
