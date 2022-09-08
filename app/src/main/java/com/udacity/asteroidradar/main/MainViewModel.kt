@@ -51,11 +51,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             asteroidRepository.insertAsteroids()
         }
-        //getPictureOfTheDay()
+        viewModelScope.launch {
+            _pictureOfTheDay.value= asteroidRepository.getPictureOfTheDay()
+        }
     }
 
 
     val asteroids= asteroidRepository.asteroids
+
+
 
 
 //    private fun getPictureOfTheDay() {
