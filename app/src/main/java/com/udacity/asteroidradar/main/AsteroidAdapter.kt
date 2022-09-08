@@ -18,13 +18,12 @@
 package com.udacity.asteroidradar.main
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.udacity.asteroidradar.databinding.AsteroidViewItemBinding
-import com.udacity.asteroidradar.network.Asteroid
+import com.udacity.asteroidradar.domain.Asteroid
 
 /**
  * This class implements a [RecyclerView] [ListAdapter] which uses Data Binding to present [List]
@@ -33,8 +32,8 @@ import com.udacity.asteroidradar.network.Asteroid
  */
 class AsteroidAdapter( val onClickListener: OnClickListener) :ListAdapter<Asteroid, AsteroidAdapter.AsteroidViewHolder>(DiffCallback) {
     /**
-     * The MarsPropertyViewHolder constructor takes the binding variable from the associated
-     * GridViewItem, which nicely gives it access to the full [MarsProperty] information.
+     * The AsteroidViewHolder constructor takes the binding variable from the associated
+     * GridViewItem, which nicely gives it access to the full [Asteroid] information.
      */
     class AsteroidViewHolder(private var binding: AsteroidViewItemBinding):
             RecyclerView.ViewHolder(binding.root) {
@@ -47,7 +46,7 @@ class AsteroidAdapter( val onClickListener: OnClickListener) :ListAdapter<Astero
     }
 
     /**
-     * Allows the RecyclerView to determine which items have changed when the [List] of [MarsProperty]
+     * Allows the RecyclerView to determine which items have changed when the [List] of [Asteroid]
      * has been updated.
      */
     companion object DiffCallback : DiffUtil.ItemCallback<Asteroid>() {
@@ -84,7 +83,7 @@ class AsteroidAdapter( val onClickListener: OnClickListener) :ListAdapter<Astero
      * associated with the current item to the [onClick] function.
      * @param clickListener lambda that will be called with the current [Asteroid]
      */
-    class OnClickListener(val clickListener: (asteroid:Asteroid) -> Unit) {
-        fun onClick(asteroid:Asteroid) = clickListener(asteroid)
+    class OnClickListener(val clickListener: (asteroid: Asteroid) -> Unit) {
+        fun onClick(asteroid: Asteroid) = clickListener(asteroid)
     }
 }

@@ -1,20 +1,23 @@
 package com.udacity.asteroidradar.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.udacity.asteroidradar.Util
+import android.app.Application
+import androidx.lifecycle.*
+import com.udacity.asteroidradar.util.Util
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
-import com.udacity.asteroidradar.network.Asteroid
+import com.udacity.asteroidradar.database.getDatabase
+import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.network.AsteroidApi
 import com.udacity.asteroidradar.network.PictureOfDay
+import com.udacity.asteroidradar.repository.AsteroidRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 enum class AsteroidApiStatus { LOADING, ERROR, DONE }
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val database = getDatabase(application)
+    private val asteroidRepository = AsteroidRepository(database)
 
     // The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<AsteroidApiStatus>()
@@ -45,39 +48,49 @@ class MainViewModel : ViewModel() {
 
 
     init {
-        getAsteroidList()
-        getPictureOfTheDay()
+        viewModelScope.launch {
+            asteroidRepository.insertAsteroids()
+        }
+        //getPictureOfTheDay()
     }
 
-    private fun getPictureOfTheDay() {
-        viewModelScope.launch {
-            try {
-                val response= AsteroidApi.retrofitService.getPictureOfTheDay("ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm")
-                //  _asteroidList.value = parseAsteroidsJsonResult(JSONObject(response))
-                _pictureOfTheDay.value = response
-                println("response" + response)
-            } catch (e: Exception) {
-                _pictureOfTheDay.value = PictureOfDay("","","")
-            }
-        }
-    }
 
-    private fun getAsteroidList() {
-        viewModelScope.launch {
-            _status.value = AsteroidApiStatus.LOADING
-            try {
-                val response= AsteroidApi.retrofitService.getAsteroidList(Util.Companion.getTodaysDate(),Util.Companion.getTodaysDate(),"ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm")
-             //  _asteroidList.value = parseAsteroidsJsonResult(JSONObject(response))
-                val asteroidList:List<Asteroid> = parseAsteroidsJsonResult(JSONObject(response))
-                _asteroidList.value = parseAsteroidsJsonResult(JSONObject(response))
-               println("response" + asteroidList.size)
-                _status.value = AsteroidApiStatus.DONE
-            } catch (e: Exception) {
-                _status.value = AsteroidApiStatus.ERROR
-                _asteroidList.value = ArrayList()
-            }
-        }
-    }
+    val asteroids= asteroidRepository.asteroids
+
+
+//    private fun getPictureOfTheDay() {
+//        viewModelScope.launch {
+//            try {
+//                val response =
+//                    AsteroidApi.retrofitService.getPictureOfTheDay("ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm")
+//                //  _asteroidList.value = parseAsteroidsJsonResult(JSONObject(response))
+//                _pictureOfTheDay.value = response
+//                println("response" + response)
+//            } catch (e: Exception) {
+//                _pictureOfTheDay.value = PictureOfDay("", "", "")
+//            }
+//        }
+//    }
+
+//    private fun getAsteroidList() {
+//        viewModelScope.launch {
+//            _status.value = AsteroidApiStatus.LOADING
+//            try {
+//                val response = AsteroidApi.retrofitService.getAsteroidList(
+//                    Util.Companion.getTodaysDate(),
+//                    Util.Companion.getTodaysDate(), "ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm"
+//                )
+//                //  _asteroidList.value = parseAsteroidsJsonResult(JSONObject(response))
+//                val asteroidList: List<Asteroid> = parseAsteroidsJsonResult(JSONObject(response))
+//                _asteroidList.value = parseAsteroidsJsonResult(JSONObject(response))
+//                println("response" + asteroidList.size)
+//                _status.value = AsteroidApiStatus.DONE
+//            } catch (e: Exception) {
+//                _status.value = AsteroidApiStatus.ERROR
+//                _asteroidList.value = ArrayList()
+//            }
+//        }
+//    }
 
 
     fun displayAsteroidDetails(asteroid: Asteroid) {
@@ -89,6 +102,15 @@ class MainViewModel : ViewModel() {
      */
     fun displayAsteroidDetailsComplete() {
         _navigateToSelectedAsteroid.value = null
+    }
+    class Factory(val app: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return MainViewModel(app) as T
+            }
+            throw IllegalArgumentException("Unable to construct viewmodel")
+        }
     }
 
 }
