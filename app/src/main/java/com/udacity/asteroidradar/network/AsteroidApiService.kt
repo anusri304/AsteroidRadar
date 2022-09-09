@@ -33,6 +33,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 //TODO move to constants
+//TODO: Glide caching and remove APIKey file
 private const val BASE_URL = "https://api.nasa.gov/"
 //enum class MarsApiFilter(val value: String) { SHOW_RENT("rent"), SHOW_BUY("buy"), SHOW_ALL("all") }
 
