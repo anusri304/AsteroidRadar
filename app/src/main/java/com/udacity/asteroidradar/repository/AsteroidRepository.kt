@@ -18,15 +18,15 @@ class AsteroidRepository(private val database: AsteroidsDatabase) {
 
 
     val asteroids: LiveData<List<Asteroid>> =
-        Transformations.map(database.asteroidDao.getAsteroids()) {
+        Transformations.map(database.asteroidDao.getAsteroids(Util.Companion.getStartDate())) {
             it.asDomainModel()
         }
 
     suspend fun insertAsteroids() {
         withContext(Dispatchers.IO) {
             val response = AsteroidApi.retrofitService.getAsteroidList(
-                Util.Companion.getStartDate(),
-                Util.Companion.getEndDate(), "ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm"
+                Util.Companion.getStartDateStr(),
+                Util.Companion.getEndDateStr(), "ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm"
             )
             val asteroidList: List<Asteroid> = parseAsteroidsJsonResult(JSONObject(response))
             database.asteroidDao.insertAll(asteroidList.asDatabaseModel())

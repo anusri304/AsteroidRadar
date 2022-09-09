@@ -5,16 +5,24 @@ import java.util.*
 
 class Util {
     companion object {
-        fun getStartDate(): String {
+        fun getStartDateStr(): String {
+            val cal = Calendar.getInstance()
             val sdf = SimpleDateFormat("yyyy-MM-dd")
-            return sdf.format(Date())
+            //cal.add(Calendar.DAY_OF_YEAR, -1)
+            return sdf.format(Date(cal.timeInMillis))
         }
 
-        fun getEndDate(): String {
+        fun getEndDateStr(): String {
+            val cal = Calendar.getInstance()
+            val sdf = SimpleDateFormat("yyyy-MM-dd")
+            cal.add(Calendar.DAY_OF_YEAR, 7)
+            return sdf.format(Date(cal.timeInMillis))
+        }
+
+        fun getStartDate(): Date {
             val cal = Calendar.getInstance()
             val s = SimpleDateFormat("yyyy-MM-dd")
-            cal.add(Calendar.DAY_OF_YEAR, 7)
-            return s.format(Date(cal.timeInMillis))
+            return s.parse(s.format(Date(cal.timeInMillis)))
         }
     }
 }
