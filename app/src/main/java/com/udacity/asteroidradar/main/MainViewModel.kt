@@ -50,22 +50,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            asteroidRepository.insertAsteroids()
+            if(Util.Companion.isNetworkAvailable(application.applicationContext)) {
+                asteroidRepository.insertAsteroids()
+            }
         }
         viewModelScope.launch {
             _pictureOfTheDay.value= asteroidRepository.getPictureOfTheDay()
         }
-        viewModelScope.launch {
-            asteroidRepository.getAsteroids(AsteroidFilter.SHOW_WEEK_ASTEROIDS)
-        }
+//        viewModelScope.launch {
+//            asteroidRepository.(AsteroidFilter.SHOW_WEEK_ASTEROIDS)
+//        }
     }
 
 
 
- val asteroids = asteroidRepository.asteroids
-     fun getAsteroids(filter:AsteroidFilter){
-       asteroidRepository.getAsteroids(filter)
-     }
+val asteroids = asteroidRepository.asteroids
+
+ val todayAsteroids = asteroidRepository.todayAsteroids
 
 
 //    private fun getPictureOfTheDay() {

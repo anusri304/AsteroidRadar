@@ -16,35 +16,23 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 class AsteroidRepository(private val database: AsteroidsDatabase) {
-    lateinit var asteroids: LiveData<List<Asteroid>>
-    fun getAsteroids(filter: AsteroidFilter): LiveData<List<Asteroid>> {
-        if (filter.value == "saved") {
-            asteroids =
-                Transformations.map(database.asteroidDao.getSavedAsteroids()) {
-                    it.asDomainModel()
-                }
-        } else if (filter.value == "today") {
-            asteroids =
-                Transformations.map(database.asteroidDao.getAsteroidsForToday(Util.Companion.getStartDate())) {
-                    it.asDomainModel()
-                }
-            println("Asteroids" + (asteroids.value?.size))
-        } else {
-            asteroids =
-                Transformations.map(database.asteroidDao.getAsteroidsForWeek(Util.Companion.getStartDate())) {
-                    it.asDomainModel()
-                }
+
+
+    val asteroids: LiveData<List<Asteroid>> =
+        Transformations.map(database.asteroidDao.getAsteroidsForWeek(Util.getStartDate())) {
+            it.asDomainModel()
         }
-        return asteroids
 
-    }
-
+    val todayAsteroids: LiveData<List<Asteroid>> =
+        Transformations.map(database.asteroidDao.getAsteroidsForToday(Util.Companion.getStartDateStr())) {
+            it.asDomainModel()
+        }
 
     suspend fun insertAsteroids() {
         withContext(Dispatchers.IO) {
             val response = AsteroidApi.retrofitService.getAsteroidList(
                 Util.Companion.getStartDateStr(),
-                Util.Companion.getEndDateStr(), ""
+                Util.Companion.getEndDateStr(), "ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm"
             )
             val asteroidList: List<Asteroid> = parseAsteroidsJsonResult(JSONObject(response))
             database.asteroidDao.insertAll(asteroidList.asDatabaseModel())
@@ -53,7 +41,7 @@ class AsteroidRepository(private val database: AsteroidsDatabase) {
     }
 
     suspend fun getPictureOfTheDay(): PictureOfDay {
-        return AsteroidApi.retrofitService.getPictureOfTheDay("")
+        return AsteroidApi.retrofitService.getPictureOfTheDay("ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm")
     }
 
 
