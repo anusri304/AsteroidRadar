@@ -7,6 +7,7 @@ import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.network.AsteroidApi
+import com.udacity.asteroidradar.network.AsteroidFilter
 import com.udacity.asteroidradar.network.PictureOfDay
 import com.udacity.asteroidradar.repository.AsteroidRepository
 import kotlinx.coroutines.launch
@@ -28,11 +29,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     // Internally, we use a MutableLiveData, because we will be updating the List of Asteroid
     // with new values
-    private val _asteroidList = MutableLiveData<List<Asteroid>>()
-
-    // The external LiveData interface to the property is immutable, so only this class can modify
-    val asteroidList: LiveData<List<Asteroid>>
-        get() = _asteroidList
+//    private val _asteroids = MutableLiveData<List<Asteroid>>()
+//
+//    // The external LiveData interface to the property is immutable, so only this class can modify
+//    val asteroids: LiveData<List<Asteroid>>
+//        get() = _asteroids
 
     // Internally, we use a MutableLiveData to handle navigation to the selected property
     private val _navigateToSelectedAsteroid = MutableLiveData<Asteroid>()
@@ -54,12 +55,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _pictureOfTheDay.value= asteroidRepository.getPictureOfTheDay()
         }
+        viewModelScope.launch {
+            asteroidRepository.getAsteroids(AsteroidFilter.SHOW_WEEK_ASTEROIDS)
+        }
     }
 
 
-    val asteroids= asteroidRepository.asteroids
 
-
+ val asteroids = asteroidRepository.asteroids
+     fun getAsteroids(filter:AsteroidFilter){
+       asteroidRepository.getAsteroids(filter)
+     }
 
 
 //    private fun getPictureOfTheDay() {

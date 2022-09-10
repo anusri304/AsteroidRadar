@@ -3,7 +3,9 @@ package com.udacity.asteroidradar.domain
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.udacity.asteroidradar.database.DatabaseAsteroid
+import com.udacity.asteroidradar.util.Util
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 data class Asteroid(val id: Long, val codename: String, val closeApproachDate: String,

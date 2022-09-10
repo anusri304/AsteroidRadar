@@ -10,7 +10,13 @@ import java.util.*
 @Dao
 interface AsteroidDao {
     @Query("select * from databaseasteroid where closeApproachDate >= :today order by closeApproachDate ASC")
-    fun getAsteroids(today: Date): LiveData<List<DatabaseAsteroid>>
+    fun getAsteroidsForWeek(today: Date): LiveData<List<DatabaseAsteroid>>
+
+    @Query("select * from databaseasteroid where closeApproachDate == :today ")
+    fun getAsteroidsForToday(today: Date): LiveData<List<DatabaseAsteroid>>
+
+    @Query("select * from databaseasteroid")
+    fun getSavedAsteroids(): LiveData<List<DatabaseAsteroid>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(asteroids: List<DatabaseAsteroid>)
