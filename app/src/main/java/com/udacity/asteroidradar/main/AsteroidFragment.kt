@@ -45,8 +45,6 @@ class AsteroidFragment : Fragment() {
                 viewModel.displayAsteroidDetailsComplete()
             }
         })
-
-
         setHasOptionsMenu(true)
 
         return binding.root
@@ -63,14 +61,12 @@ class AsteroidFragment : Fragment() {
 
             when (item.itemId) {
                 R.id.show_saved_menu -> {
-                    observeAsteroidListAndUpdate(viewModel.asteroids,AsteroidFilter.SHOW_SAVED_ASTEROIDS)
+                    observeAsteroidListAndUpdate(viewModel.weeklyAsteroids,AsteroidFilter.SHOW_SAVED_ASTEROIDS)
                 }
                 R.id.show_today_menu -> {
-                    observeAsteroidListAndUpdate(viewModel.todayAsteroids, AsteroidFilter.SHOW_TODAY_ASTEROIDS)
+                    observeAsteroidListAndUpdate(viewModel.asteroids, AsteroidFilter.SHOW_TODAY_ASTEROIDS)
                 }
-                //Todo: remove below
-              //  R.id.show_delete_menu ->viewModel.deleteAsteroidsBeforeToday()
-                else -> observeAsteroidListAndUpdate(viewModel.asteroids, AsteroidFilter.SHOW_WEEK_ASTEROIDS)
+                else -> observeAsteroidListAndUpdate(viewModel.weeklyAsteroids, AsteroidFilter.SHOW_WEEK_ASTEROIDS)
             }
 
         return true

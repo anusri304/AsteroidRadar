@@ -27,32 +27,44 @@
             type="com.udacity.asteroidradar.domain.Asteroid" />
     </data>
 
-    <LinearLayout
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <androidx.cardview.widget.CardView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_background"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/asteroid_name"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            app:cardBackgroundColor="@color/app_background"
-            app:cardElevation="10dp"
-            app:cardMaxElevation="12dp"
-            app:cardPreventCornerOverlap="true">
+            android:layout_height="50dp"
+            android:padding="8dp"
+            android:text="@{asteroid.codename}"
+            android:textColor="@color/default_text_color"
+            android:textStyle="bold"
+            android:textSize="20dp" />
+
 
             <TextView
-                android:id="@+id/asteroid_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp"
-               android:textSize="16dp"
-                android:text="@{asteroid.codename + '\n' + '\n'+ asteroid.closeApproachDate }"
-                android:textColor="@color/default_text_color" />
+                android:id="@+id/asteroid_close_approach_date"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="2dp"
+                android:text="@{asteroid.closeApproachDate }"
+                android:textColor="@color/default_text_color"
+                android:layout_below="@+id/asteroid_name"
+                android:textSize="16dp" />
 
-        </androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/status_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="6dp"
+                app:srcCompat="@drawable/ic_help_circle"
+                app:statusIcon="@{asteroid.potentiallyHazardous}" />
+        </RelativeLayout>
 
-    </LinearLayout>
 
 </layout>

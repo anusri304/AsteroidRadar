@@ -18,17 +18,18 @@
 package com.udacity.asteroidradar.work
 
 import android.content.Context
+import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
 import retrofit2.HttpException
 
-class DeleteAsteroidWorker(appContext: Context, params: WorkerParameters):
+class RefreshAsteroidWorker(appContext: Context, params: WorkerParameters):
         CoroutineWorker(appContext, params) {
-
+    val TAG = this::class.java.simpleName
     companion object {
-        const val WORK_NAME = "DeleteAsteroidWorker"
+        const val WORK_NAME = "DownloadAsteroidWorker"
     }
 
     /**
@@ -41,7 +42,10 @@ class DeleteAsteroidWorker(appContext: Context, params: WorkerParameters):
         val database = getDatabase(applicationContext)
         val repository = AsteroidRepository(database)
         return try {
+            repository.insertAsteroids()
+            Log.i(TAG,"Inserted Asteroids Successfully")
             repository.deleteAsteroidsBeforeToday()
+            Log.i(TAG,"Deleted Asteroids Successfully")
             Result.success()
         } catch (e: HttpException) {
             Result.retry()

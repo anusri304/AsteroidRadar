@@ -40,7 +40,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     var selectedFilter: String = AsteroidFilter.SHOW_WEEK_ASTEROIDS.value
 
-    var isWeekSelected: Boolean = true
+    var isTodaySelected: Boolean = true
 
     init {
         viewModelScope.launch {
@@ -61,19 +61,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val asteroids = asteroidRepository.asteroids
 
-    val todayAsteroids = asteroidRepository.todayAsteroids
+    val weeklyAsteroids = asteroidRepository.weeklyAsteroids
 
 
     fun displayAsteroidDetails(asteroid: Asteroid) {
         _navigateToSelectedAsteroid.value = asteroid
     }
-
-    // TODO: Remove
-//    fun deleteAsteroidsBeforeToday() {
-//        viewModelScope.launch {
-//            asteroidRepository.deleteAsteroidsBeforeToday()
-//        }
-//    }
 
 
     /**
@@ -94,11 +87,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun updateFilter(filter: AsteroidFilter) {
-        if(filter.value=="today") {
-            isWeekSelected = false;
-        }
-        else {
-            isWeekSelected = true;
+        if (filter.value.equals("today")) {
+            isTodaySelected = true
+        } else {
+            isTodaySelected = false
         }
     }
 

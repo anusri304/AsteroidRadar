@@ -19,8 +19,7 @@ package com.udacity.asteroidradar
 
 import android.app.Application
 import androidx.work.*
-import com.udacity.asteroidradar.work.DeleteAsteroidWorker
-import com.udacity.asteroidradar.work.DownloadAsteroidWorker
+import com.udacity.asteroidradar.work.RefreshAsteroidWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,38 +33,24 @@ class AsteroidApplication : Application() {
 
     private fun delayedInit() {
         applicationScope.launch {
-            setupDownloadWork()
-            setupDeleteWork()
+            setupRefreshAsteroidWork()
         }
     }
 
-    private fun setupDownloadWork() {
+    private fun setupRefreshAsteroidWork() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .setRequiresBatteryNotLow(true)
             .setRequiresCharging(true)
             .build()
 
-        val oneTimeRequest= OneTimeWorkRequestBuilder<DownloadAsteroidWorker>()
+        val oneTimeRequest= OneTimeWorkRequestBuilder<RefreshAsteroidWorker>()
             .setConstraints(constraints)
             .build()
 
-        WorkManager.getInstance().enqueueUniqueWork( DownloadAsteroidWorker.WORK_NAME, ExistingWorkPolicy.KEEP,oneTimeRequest)
+        WorkManager.getInstance().enqueueUniqueWork( RefreshAsteroidWorker.WORK_NAME, ExistingWorkPolicy.KEEP,oneTimeRequest)
     }
 
-    private fun setupDeleteWork() {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(true)
-            .setRequiresCharging(true)
-            .build()
-
-        val oneTimeRequest= OneTimeWorkRequestBuilder<DeleteAsteroidWorker>()
-            .setConstraints(constraints)
-            .build()
-
-        WorkManager.getInstance().enqueueUniqueWork( DeleteAsteroidWorker.WORK_NAME, ExistingWorkPolicy.KEEP,oneTimeRequest)
-    }
 
     /**
      * onCreate is called before the first screen is shown to the user.
