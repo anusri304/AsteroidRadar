@@ -38,13 +38,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val pictureOfTheDay: LiveData<PictureOfDay>
         get() = _pictureOfTheDay
 
+    var selectedFilter: String = AsteroidFilter.SHOW_WEEK_ASTEROIDS.value
+
+    var isWeekSelected: Boolean = true
 
     init {
         viewModelScope.launch {
             if (Util.Companion.isNetworkAvailable(application.applicationContext)) {
                 _status.value = AsteroidApiStatus.LOADING
                 asteroidRepository.insertAsteroids()
-             _status.value = AsteroidApiStatus.DONE
+                _status.value = AsteroidApiStatus.DONE
             }
 
         }
@@ -87,6 +90,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 return MainViewModel(app) as T
             }
             throw IllegalArgumentException("Unable to construct viewmodel")
+        }
+    }
+
+    fun updateFilter(filter: AsteroidFilter) {
+        if(filter.value=="today") {
+            isWeekSelected = false;
+        }
+        else {
+            isWeekSelected = true;
         }
     }
 

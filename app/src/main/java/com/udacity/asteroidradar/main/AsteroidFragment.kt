@@ -62,19 +62,24 @@ class AsteroidFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
             when (item.itemId) {
-                R.id.show_saved_menu -> observeAsteroidListAndUpdate(viewModel.asteroids)
-                R.id.show_today_menu -> observeAsteroidListAndUpdate(viewModel.todayAsteroids)
+                R.id.show_saved_menu -> {
+                    observeAsteroidListAndUpdate(viewModel.asteroids,AsteroidFilter.SHOW_SAVED_ASTEROIDS)
+                }
+                R.id.show_today_menu -> {
+                    observeAsteroidListAndUpdate(viewModel.todayAsteroids, AsteroidFilter.SHOW_TODAY_ASTEROIDS)
+                }
                 //Todo: remove below
               //  R.id.show_delete_menu ->viewModel.deleteAsteroidsBeforeToday()
-                else -> observeAsteroidListAndUpdate(viewModel.asteroids)
+                else -> observeAsteroidListAndUpdate(viewModel.asteroids, AsteroidFilter.SHOW_WEEK_ASTEROIDS)
             }
 
         return true
     }
 
     private fun observeAsteroidListAndUpdate(
-        asteroidListLiveData: LiveData<List<Asteroid>>
+        asteroidListLiveData: LiveData<List<Asteroid>>, filter:AsteroidFilter
     ) {
+        viewModel.updateFilter(filter)
         asteroidListLiveData.observe(viewLifecycleOwner) {
            adapter.submitList(it)
         }
