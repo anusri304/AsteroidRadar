@@ -64,6 +64,8 @@ class AsteroidFragment : Fragment() {
             when (item.itemId) {
                 R.id.show_saved_menu -> observeAsteroidListAndUpdate(viewModel.asteroids)
                 R.id.show_today_menu -> observeAsteroidListAndUpdate(viewModel.todayAsteroids)
+                //Todo: remove below
+              //  R.id.show_delete_menu ->viewModel.deleteAsteroidsBeforeToday()
                 else -> observeAsteroidListAndUpdate(viewModel.asteroids)
             }
 

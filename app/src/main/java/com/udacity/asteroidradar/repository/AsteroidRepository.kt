@@ -8,7 +8,6 @@ import com.udacity.asteroidradar.database.asDomainModel
 import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.domain.asDatabaseModel
 import com.udacity.asteroidradar.network.AsteroidApi
-import com.udacity.asteroidradar.network.AsteroidFilter
 import com.udacity.asteroidradar.network.PictureOfDay
 import com.udacity.asteroidradar.util.Util
 import kotlinx.coroutines.Dispatchers
@@ -19,20 +18,20 @@ class AsteroidRepository(private val database: AsteroidsDatabase) {
 
 
     val asteroids: LiveData<List<Asteroid>> =
-        Transformations.map(database.asteroidDao.getAsteroidsForWeek(Util.getStartDate())) {
+        Transformations.map(database.asteroidDao.getAsteroidsForWeek(Util.getTodayStr())) {
             it.asDomainModel()
         }
 
     val todayAsteroids: LiveData<List<Asteroid>> =
-        Transformations.map(database.asteroidDao.getAsteroidsForToday(Util.Companion.getStartDateStr())) {
+        Transformations.map(database.asteroidDao.getAsteroidsForToday(Util.Companion.getTodayStr())) {
             it.asDomainModel()
         }
 
     suspend fun insertAsteroids() {
         withContext(Dispatchers.IO) {
             val response = AsteroidApi.retrofitService.getAsteroidList(
-                Util.Companion.getStartDateStr(),
-                Util.Companion.getEndDateStr(), "ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm"
+                Util.getTodayStr(),
+                Util.getEndDateStr(), "ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm"
             )
             val asteroidList: List<Asteroid> = parseAsteroidsJsonResult(JSONObject(response))
             database.asteroidDao.insertAll(asteroidList.asDatabaseModel())
@@ -42,6 +41,12 @@ class AsteroidRepository(private val database: AsteroidsDatabase) {
 
     suspend fun getPictureOfTheDay(): PictureOfDay {
         return AsteroidApi.retrofitService.getPictureOfTheDay("ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm")
+    }
+
+    suspend fun deleteAsteroidsBeforeToday() {
+        withContext(Dispatchers.IO) {
+            database.asteroidDao.deleteAsteroidsBeforeToday(Util.getTodayStr())
+        }
     }
 
 

@@ -1,14 +1,19 @@
 package com.udacity.asteroidradar
 
+import android.media.AudioRecord.MetricsConstants.SOURCE
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.udacity.asteroidradar.main.AsteroidAdapter
 import com.udacity.asteroidradar.domain.Asteroid
+import com.udacity.asteroidradar.main.AsteroidApiStatus
 import com.udacity.asteroidradar.network.PictureOfDay
 
 @BindingAdapter("statusIcon")
@@ -60,6 +65,7 @@ fun bindPicOfDayImage(imageView: ImageView, pictureOfDay: PictureOfDay?) {
             val imgUri = pictureOfDay?.url.toUri().buildUpon().scheme("https").build()
             Glide.with(imageView.context)
                 .load(imgUri)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .apply(
                     RequestOptions()
                         .placeholder(R.drawable.loading_animation)
@@ -73,4 +79,15 @@ fun bindPicOfDayImage(imageView: ImageView, pictureOfDay: PictureOfDay?) {
             .into(imageView)
     }
 }
+
+@BindingAdapter("asteroidStatus")
+fun bindAsteroidStatus(progressBar: ProgressBar, statusAsteroid: AsteroidApiStatus?) {
+    when (statusAsteroid) {
+        AsteroidApiStatus.LOADING -> {
+            progressBar.visibility = View.VISIBLE
+        }
+        else -> {progressBar.visibility = View.GONE}
+    }
+}
+
 
