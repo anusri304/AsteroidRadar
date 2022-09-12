@@ -27,6 +27,7 @@ class AsteroidRepository(private val database: AsteroidsDatabase) {
             it.asDomainModel()
         }
 
+
     suspend fun insertAsteroids() {
         withContext(Dispatchers.IO) {
             val response = AsteroidApi.retrofitService.getAsteroidList(
