@@ -27,6 +27,12 @@ class AsteroidRepository(private val database: AsteroidsDatabase) {
             it.asDomainModel()
         }
 
+    val savedAsteroids: LiveData<List<Asteroid>> =
+        Transformations.map(database.asteroidDao.getSavedAsteroids()) {
+            it.asDomainModel()
+        }
+
+
 
     suspend fun insertAsteroids() {
         withContext(Dispatchers.IO) {

@@ -33,7 +33,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 //TODO move to constants
-//TODO: Glide caching and remove APIKey file
+//TODO: Glide caching , work maager periodic attempts and remove APIKey file
 private const val BASE_URL = "https://api.nasa.gov/"
 enum class AsteroidFilter(val value: String) { SHOW_WEEK_ASTEROIDS("week"), SHOW_TODAY_ASTEROIDS("today"), SHOW_SAVED_ASTEROIDS("saved") }
 

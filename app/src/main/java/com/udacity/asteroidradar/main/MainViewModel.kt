@@ -38,7 +38,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val pictureOfTheDay: LiveData<PictureOfDay>
         get() = _pictureOfTheDay
 
-    var selectedFilter: String = AsteroidFilter.SHOW_WEEK_ASTEROIDS.value
+    var selectedFilter: String = AsteroidFilter.SHOW_TODAY_ASTEROIDS.value
 
     var isTodaySelected: Boolean = true
 
@@ -62,6 +62,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val asteroids = asteroidRepository.asteroids
 
     val weeklyAsteroids = asteroidRepository.weeklyAsteroids
+
+    val savedAsteroids = asteroidRepository.savedAsteroids
 
 
     fun displayAsteroidDetails(asteroid: Asteroid) {
@@ -87,10 +89,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun updateFilter(filter: AsteroidFilter) {
-        if (filter.value.equals("today")) {
-            isTodaySelected = true
-        } else {
-            isTodaySelected = false
+        selectedFilter = filter.value;
+//        if (filter.value.equals("today")) {
+//            isTodaySelected = true
+//        } else {
+//            isTodaySelected = false
+//        }
+    }
+
+    fun getAsteroidList() : LiveData<List<Asteroid>>{
+        if (selectedFilter.equals("today")){
+            return asteroids
+        }
+        else if (selectedFilter.equals("week")){
+            return  weeklyAsteroids
+            }
+        else {
+            return savedAsteroids
         }
     }
 

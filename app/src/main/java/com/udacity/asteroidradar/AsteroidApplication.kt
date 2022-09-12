@@ -39,8 +39,7 @@ class AsteroidApplication : Application() {
 
     private fun setupRefreshAsteroidWork() {
         val constraints = Constraints.Builder()
-                //TODO:Change below
-            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiredNetworkType(NetworkType.UNMETERED)
             .setRequiresBatteryNotLow(true)
             .setRequiresCharging(true)
             .build()
