@@ -42,6 +42,7 @@ class RefreshAsteroidWorker(appContext: Context, params: WorkerParameters):
         val database = getDatabase(applicationContext)
         val repository = AsteroidRepository(database)
         return try {
+            Log.i(TAG,"doWork invoked Successfully")
             repository.insertAsteroids()
             Log.i(TAG,"Inserted Asteroids Successfully")
             repository.deleteAsteroidsBeforeToday()

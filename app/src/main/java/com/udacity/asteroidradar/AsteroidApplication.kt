@@ -23,7 +23,6 @@ import com.udacity.asteroidradar.work.RefreshAsteroidWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 /**
  * Override application to setup background work via WorkManager
@@ -40,20 +39,16 @@ class AsteroidApplication : Application() {
 
     private fun setupRefreshAsteroidWork() {
         val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiredNetworkType(NetworkType.UNMETERED)
             .setRequiresBatteryNotLow(true)
-           // .setRequiresCharging(true)
+            .setRequiresCharging(true)
             .build()
 
-//        val oneTimeRequest= OneTimeWorkRequestBuilder<RefreshAsteroidWorker>()
-//            .setConstraints(constraints)
-//            .build()
+        val oneTimeRequest= OneTimeWorkRequestBuilder<RefreshAsteroidWorker>()
+            .setConstraints(constraints)
+            .build()
 
-        val imageWorker = PeriodicWorkRequestBuilder<RefreshAsteroidWorker>(
-            15, TimeUnit.MINUTES
-        ).setConstraints(constraints).build()
-
-        WorkManager.getInstance().enqueueUniquePeriodicWork( RefreshAsteroidWorker.WORK_NAME, ExistingPeriodicWorkPolicy.KEEP,imageWorker)
+        WorkManager.getInstance().enqueueUniqueWork( RefreshAsteroidWorker.WORK_NAME, ExistingWorkPolicy.KEEP,oneTimeRequest)
     }
 
 

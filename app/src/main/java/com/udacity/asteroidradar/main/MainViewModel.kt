@@ -40,11 +40,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     var selectedFilter: String = AsteroidFilter.SHOW_TODAY_ASTEROIDS.value
 
-    var isTodaySelected: Boolean = true
-
     init {
+        // This is done if the workmanager fails to insert data
         viewModelScope.launch {
-            if (Util.Companion.isNetworkAvailable(application.applicationContext)) {
+            if (Util.isNetworkAvailable(application.applicationContext)) {
                 _status.value = AsteroidApiStatus.LOADING
                 asteroidRepository.insertAsteroids()
                 _status.value = AsteroidApiStatus.DONE
