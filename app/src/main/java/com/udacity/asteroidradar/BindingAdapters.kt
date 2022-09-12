@@ -29,8 +29,12 @@ fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
 fun bindDetailsStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {
         imageView.setImageResource(R.drawable.asteroid_hazardous)
+        imageView.contentDescription = imageView.resources.getString(
+            R.string.potentially_hazardous_asteroid_image)
     } else {
         imageView.setImageResource(R.drawable.asteroid_safe)
+        imageView.contentDescription = imageView.resources.getString(
+            R.string.not_hazardous_asteroid_image)
     }
 }
 
@@ -60,20 +64,20 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<Asteroid>?) {
 
 @BindingAdapter("pictureOfDay")
 fun bindPicOfDayImage(imageView: ImageView, pictureOfDay: PictureOfDay?) {
-    if (pictureOfDay?.mediaType.equals("image")) {
-        pictureOfDay?.url?.let {
-            val imgUri = pictureOfDay?.url.toUri().buildUpon().scheme("https").build()
-            Glide.with(imageView.context)
-                .load(imgUri)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .apply(
-                    RequestOptions()
-                        .placeholder(R.drawable.loading_animation)
-                        .error(R.drawable.ic_broken_image)
-                )
-                .into(imageView)
-        }
-    } else {
+    if (pictureOfDay != null && pictureOfDay.mediaType.equals("image")) {
+        val imgUri = pictureOfDay?.url?.toUri()?.buildUpon()?.scheme("https")?.build()
+        Glide.with(imageView.context)
+            .load(imgUri)
+            .apply(
+                RequestOptions()
+                    .placeholder(R.drawable.loading_animation)
+                    .error(R.drawable.ic_broken_image)
+            )
+            .into(imageView)
+        imageView.contentDescription = String.format(imageView.resources.getString(
+            R.string.nasa_picture_of_day_content_description_format),pictureOfDay.title)
+    }
+    else if(pictureOfDay != null) { // This is to avoid getting Image not found before loading the actual image and to cater for video
         Glide.with(imageView.context)
             .load(R.drawable.broken)
             .into(imageView)
@@ -86,7 +90,9 @@ fun bindAsteroidStatus(progressBar: ProgressBar, statusAsteroid: AsteroidApiStat
         AsteroidApiStatus.LOADING -> {
             progressBar.visibility = View.VISIBLE
         }
-        else -> {progressBar.visibility = View.GONE}
+        else -> {
+            progressBar.visibility = View.GONE
+        }
     }
 }
 

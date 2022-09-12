@@ -52,8 +52,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         }
         viewModelScope.launch {
-            if (Util.Companion.isNetworkAvailable(application.applicationContext)) {
+            try{
                 _pictureOfTheDay.value = asteroidRepository.getPictureOfTheDay()
+            }
+            catch(e:Exception) {
+                _pictureOfTheDay.value = PictureOfDay("","","")
+                println ("Error fetching data"+e.message)
             }
         }
 
@@ -90,11 +94,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateFilter(filter: AsteroidFilter) {
         selectedFilter = filter.value;
-//        if (filter.value.equals("today")) {
-//            isTodaySelected = true
-//        } else {
-//            isTodaySelected = false
-//        }
     }
 
     fun getAsteroidList() : LiveData<List<Asteroid>>{
