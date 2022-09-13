@@ -61,18 +61,18 @@ class AsteroidFragment : Fragment() {
 
             when (item.itemId) {
                 R.id.show_saved_menu -> {
-                    observeAsteroidListAndUpdate(viewModel.savedAsteroids,AsteroidFilter.SHOW_SAVED_ASTEROIDS)
+                    observeAsteroids(viewModel.savedAsteroids,AsteroidFilter.SHOW_SAVED_ASTEROIDS)
                 }
                 R.id.show_today_menu -> {
-                    observeAsteroidListAndUpdate(viewModel.asteroids, AsteroidFilter.SHOW_TODAY_ASTEROIDS)
+                    observeAsteroids(viewModel.asteroids, AsteroidFilter.SHOW_TODAY_ASTEROIDS)
                 }
-                else -> observeAsteroidListAndUpdate(viewModel.weeklyAsteroids, AsteroidFilter.SHOW_WEEK_ASTEROIDS)
+                else -> observeAsteroids(viewModel.weeklyAsteroids, AsteroidFilter.SHOW_WEEK_ASTEROIDS)
             }
 
         return true
     }
 
-    private fun observeAsteroidListAndUpdate(
+    private fun observeAsteroids(
         asteroidListLiveData: LiveData<List<Asteroid>>, filter:AsteroidFilter
     ) {
         viewModel.updateFilter(filter)

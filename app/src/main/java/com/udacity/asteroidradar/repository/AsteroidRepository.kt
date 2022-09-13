@@ -9,6 +9,7 @@ import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.domain.asDatabaseModel
 import com.udacity.asteroidradar.network.AsteroidApi
 import com.udacity.asteroidradar.network.PictureOfDay
+import com.udacity.asteroidradar.util.Constants.API_KEY
 import com.udacity.asteroidradar.util.Util
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -38,7 +39,7 @@ class AsteroidRepository(private val database: AsteroidsDatabase) {
         withContext(Dispatchers.IO) {
             val response = AsteroidApi.retrofitService.getAsteroidList(
                 Util.getTodayStr(),
-                Util.getEndDateStr(), "ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm"
+                Util.getEndDateStr(), API_KEY
             )
             val asteroidList: List<Asteroid> = parseAsteroidsJsonResult(JSONObject(response))
             database.asteroidDao.insertAll(asteroidList.asDatabaseModel())
@@ -47,7 +48,7 @@ class AsteroidRepository(private val database: AsteroidsDatabase) {
     }
 
     suspend fun getPictureOfTheDay(): PictureOfDay {
-        return AsteroidApi.retrofitService.getPictureOfTheDay("ZkPL6anWyY2iJFvTxGJC3XmAKAQU3eegGgohaDFm")
+        return AsteroidApi.retrofitService.getPictureOfTheDay(API_KEY)
     }
 
     suspend fun deleteAsteroidsBeforeToday() {

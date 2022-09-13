@@ -20,7 +20,9 @@ package com.udacity.asteroidradar.network
 // import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import kotlinx.coroutines.Deferred
+import com.udacity.asteroidradar.util.Constants.BASE_URL
+import com.udacity.asteroidradar.util.Constants.ASTEROIDS_URL
+import com.udacity.asteroidradar.util.Constants.IMAGE_OF_DAY_URL
 import okhttp3.OkHttpClient
 // import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
@@ -32,9 +34,6 @@ import java.util.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
-//TODO move to constants
-//TODO: Glide caching , work maager periodic attempts and remove APIKey file
-private const val BASE_URL = "https://api.nasa.gov/"
 enum class AsteroidFilter(val value: String) { SHOW_WEEK_ASTEROIDS("week"), SHOW_TODAY_ASTEROIDS("today"), SHOW_SAVED_ASTEROIDS("saved") }
 
 /**
@@ -68,14 +67,14 @@ interface AsteroidApiService {
      * The @GET annotation indicates that  endpoint will be requested with the GET
      * HTTP method
      */
-    @GET("neo/rest/v1/feed")
+    @GET(ASTEROIDS_URL)
     suspend fun getAsteroidList(
         @Query("start_date") start_date: String,
         @Query("end_date") end_date: String,
         @Query("api_key") api_key: String
     ): String
 
-    @GET("planetary/apod")
+    @GET(IMAGE_OF_DAY_URL)
     suspend fun getPictureOfTheDay(
         @Query("api_key") api_key: String
     ): PictureOfDay
